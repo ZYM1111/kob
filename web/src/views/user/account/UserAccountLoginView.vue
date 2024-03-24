@@ -1,5 +1,5 @@
 <template>
-    <ContentField>
+    <ContentField v-if="!$store.state.user.pulling_info">
         <div class="row justify-content-md-center">
             <div class="col-3">
                 <form @submit.prevent="login">
@@ -11,7 +11,7 @@
                         <label for="password" class="form-label">密码</label>
                         <input type="password" class="form-control" placeholder="请输入密码" v-model="password">
                     </div>
-                    <div class="error-message">{{ error_message}}</div>
+                    <div class="error-message">{{ error_message }}</div>
                     <button type="submit" class="btn btn-primary">提交</button>
                 </form>
             </div>
@@ -35,6 +35,22 @@ export default {
         let password = ref('');
         let error_message = ref('');
 
+        const jwt_token = localStorage.getItem("jwt_token");
+        if (jwt_token) {
+            store.commit("updateToken", jwt_token);
+            store.dispatch("getinfo", {
+                success() {
+                    router.push({ name: "home" });
+                    store.commit("updatePullingInfo", false);
+                },
+                error() {
+                    store.commit("updatePullingInfo", false);
+                }
+            })
+        } else {
+            store.commit("updatePullingInfo", false);
+        }
+
         const login = () => {
             error_message.value = "";
             store.dispatch("login", {
@@ -44,8 +60,8 @@ export default {
                     store.dispatch("getinfo", {
                         success() {
                             router.push({ name: 'home' });
-                            console.log(store.state.user);
-                        },      
+                            // console.log(store.state.user);
+                        },
                         error() {
                             error_message.value = "获取用户信息失败";
                         }
@@ -67,10 +83,11 @@ export default {
 </script>
 
 <style scoped>
-button{
+button {
     width: 100%;
 }
-div.error-message{
+
+div.error-message {
     color: red;
 }
 </style>

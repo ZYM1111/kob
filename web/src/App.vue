@@ -15,12 +15,26 @@ export default {
   },
   setup() {
     // $.ajax({
+    //   url: "http://localhost:3000/user/account/token/",
+    //   type: "post",
+    //   data: {
+    //     username: "zym",
+    //     password: "pzym",
+    //   },
+    //   success(resp) {
+    //     console.log(resp);
+    //   },
+    //   error(resp) {
+    //     console.log(resp);
+    //   }
+    // });
+    // $.ajax({
     //   url: "http://localhost:3000/user/account/register/",
     //   type: "post",
     //   data: {
-    //     username: "zym2",
-    //     password: "pzym2",
-    //     confirmedPassword: "pzym2",
+    //     username: "zym3",
+    //     password: "pzym3",
+    //     confirmedPassword: "pzym3",
     //   },
     //   success(resp) {
     //     console.log(resp);

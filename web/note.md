@@ -1,0 +1,3 @@
+- 前端页面授权
+  - 在path中新增meta信息，记录该页面是否需要登录
+  - 使用router.beforeEach((to, from, next))
