@@ -32,13 +32,45 @@ export default {
         //     error(resp) {
         //         console.log(resp);
         //     }
-        // }),
+        // });
+        // $.ajax({
+        //     url: "http://127.0.0.1:3000/user/bot/remove/",
+        //     type: "POST",
+        //     data: {
+        //         bot_id: "3",
+        //     },
+        //     headers: {
+        //         Authorization: "Bearer " + store.state.user.token,
+        //     },
+        //     success(resp) {
+        //         console.log(resp);
+        //     },
+        //     error(resp) {
+        //         console.log(resp);
+        //     }
+        // });
+        // $.ajax({
+        //     url: "http://127.0.0.1:3000/user/bot/update/",
+        //     type: "POST",
+        //     data: {
+        //         bot_id: "1",
+        //         title: "bot3的新标题",
+        //         description: "bot3的新描述",
+        //         content: "bot3的新代码"
+        //     },
+        //     headers: {
+        //         Authorization: "Bearer " + store.state.user.token,
+        //     },
+        //     success(resp) {
+        //         console.log(resp);
+        //     },
+        //     error(resp) {
+        //         console.log(resp);
+        //     }
+        // });
         $.ajax({
-            url: "http://127.0.0.1:3000/user/bot/remove/",
-            type: "POST",
-            data: {
-                bot_id: "3",
-            },
+            url: "http://127.0.0.1:3000/user/bot/getlist/",
+            type: "GET",
             headers: {
                 Authorization: "Bearer " + store.state.user.token,
             },
@@ -48,7 +80,7 @@ export default {
             error(resp) {
                 console.log(resp);
             }
-        })
+        });
     }
 }
 
