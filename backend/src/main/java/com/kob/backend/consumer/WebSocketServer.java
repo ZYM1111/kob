@@ -3,6 +3,7 @@ package com.kob.backend.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.kob.backend.consumer.utils.Game;
 import com.kob.backend.consumer.utils.JwtAuthentication;
+import com.kob.backend.mapper.RecordMapper;
 import com.kob.backend.mapper.UserMapper;
 import com.kob.backend.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,16 @@ public class WebSocketServer {
     private final static CopyOnWriteArraySet<User> matchpool = new CopyOnWriteArraySet<>();
     private Session session = null;
     private Game game = null;
+    public static RecordMapper recordMapper;
 
     @Autowired
     public void setUserMapper(UserMapper userMapper) {
         WebSocketServer.userMapper = userMapper;
+    }
+
+    @Autowired
+    public void setRecordMapper(RecordMapper recordMapper) {
+        WebSocketServer.recordMapper = recordMapper;
     }
 
     @OnOpen
@@ -66,7 +73,7 @@ public class WebSocketServer {
             matchpool.remove(a);
             matchpool.remove(b);
 
-            Game game = new Game(13,14,20, a.getId(), b.getId());
+            Game game = new Game(13, 14, 20, a.getId(), b.getId());
             game.createMap();
             users.get(a.getId()).game = game;
             users.get(b.getId()).game = game;
@@ -110,6 +117,7 @@ public class WebSocketServer {
             game.setNextStepB(direction);
         }
     }
+
     @OnMessage
     public void onMessage(String message, Session session) {
         // 从Client接收消息
