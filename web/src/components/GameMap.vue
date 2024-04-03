@@ -15,7 +15,7 @@ export default {
         let parent = ref(null);
         let canvas = ref(null);
         onMounted(() => {
-            new GameMap(canvas.value.getContext('2d'), parent.value, store);
+            store.commit("updateGameObject", new GameMap(canvas.value.getContext('2d'), parent.value, store));
         });
         return {
             parent,
@@ -26,10 +26,10 @@ export default {
 </script>
 
 <style scoped>
-div.gamemap{
+div.gamemap {
     width: 100%;
     height: 100%;
-    display: flex;  
+    display: flex;
     justify-content: center;
     align-items: center;
 }

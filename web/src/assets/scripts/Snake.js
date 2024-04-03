@@ -42,7 +42,7 @@ export class Snake extends AcGameObject {
 
     set_direction(d) {
         this.direction = d;
-        console.log("set d");
+        console.log("set d:" + d);
     }
 
     check_tail_increasing() {
@@ -67,9 +67,6 @@ export class Snake extends AcGameObject {
             this.cells[i] = JSON.parse(JSON.stringify(this.cells[i - 1]));
         }
 
-        if (!this.gamemap.check_valid(this.next_cell)) {
-            this.status = "die";
-        }
     }
 
     update_move() {
