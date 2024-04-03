@@ -21,7 +21,7 @@ public class MatchingController {
         return matchingService.addPlayer(userId, rating);
     }
 
-    @PostMapping("player/remove/")
+    @PostMapping("/player/remove/")
     public String removePlayer(@RequestParam MultiValueMap<String, String> data) {
         Integer userId = Integer.parseInt(Objects.requireNonNull(data.getFirst("user_id")));
         return matchingService.removePlayer(userId);
