@@ -2,9 +2,12 @@ package com.kob.backend.consumer.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.kob.backend.consumer.WebSocketServer;
+import com.kob.backend.pojo.Bot;
 import com.kob.backend.pojo.Record;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,14 +29,24 @@ public class Game extends Thread {
     private ReentrantLock lock = new ReentrantLock();
     private String status = "playing"; // "playing"表示正在游戏; "finished"表示游戏结束
     private String loser = ""; // "all", "A", "B"
-
-    public Game(Integer rows, Integer cols, Integer inner_walls_count, Integer idA, Integer idB) {
+    private final String addBotUrl = "http://127.0.0.1:3002/bot/add/";
+    public Game(Integer rows, Integer cols, Integer inner_walls_count, Integer idA, Bot botA, Integer idB, Bot botB) {
         this.rows = rows;
         this.cols = cols;
         this.inner_walls_count = inner_walls_count;
         this.g = new int[rows][cols];
-        this.playerA = new Player(idA, this.rows - 2, 1, new ArrayList<>());
-        this.playerB = new Player(idB, 1, this.cols - 2, new ArrayList<>());
+        Integer botIdA = -1, botIdB = -1;
+        String botCodeA = "", botCodeB = "";
+        if (botA != null) {
+            botIdA = botA.getId();
+            botCodeA = botA.getContent();
+        }
+        if (botB != null){
+            botIdB = botB.getId();
+            botCodeB = botB.getContent();
+        }
+        this.playerA = new Player(idA, botIdA, botCodeA, this.rows - 2, 1, new ArrayList<>());
+        this.playerB = new Player(idB, botIdB, botCodeB, 1, this.cols - 2, new ArrayList<>());
     }
 
     public void setNextStepA(Integer nextStepA) {
@@ -117,12 +130,48 @@ public class Game extends Thread {
         }
     }
 
+    private String getInput(Player player) {
+        // 地图 + me.sx + me.sy + 我的操作 + you.sx + you.sy + 你的操作
+        Player me, you;
+        if (player.getId().equals(playerA.getId())) {
+            me = playerA;
+            you = playerB;
+        } else {
+            me = playerB;
+            you = playerA;
+        }
+        JSONObject data = new JSONObject();
+        data.put("map", getMapString());
+        data.put("my_sx", me.getSx());
+        data.put("my_sy", me.getSy());
+        data.put("my_ops", me.getSteps());
+        data.put("your_sx", you.getSx());
+        data.put("your_sy", you.getSy());
+        data.put("your_ops", you.getSteps());
+        return data.toJSONString();
+    }
+
+    private void sendBotCode(Player player) {
+        if (player.getBotId().equals(-1)) {
+            return;
+        }
+        MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
+        data.add("user_id", player.getId().toString());
+        data.add("bot_code", player.getBotCode());
+        data.add("input", getInput(player));
+        WebSocketServer.restTemplate.postForObject(addBotUrl, data, String.class);
+    }
+
     private boolean nextStep() {
         try {
             Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        sendBotCode(playerA);
+        sendBotCode(playerB);
+
         for (int i = 0; i < 50; i++) {
             try {
                 Thread.sleep(100);
