@@ -142,12 +142,12 @@ public class Game extends Thread {
         }
         JSONObject data = new JSONObject();
         data.put("map", getMapString());
-        data.put("my_sx", me.getSx());
-        data.put("my_sy", me.getSy());
-        data.put("my_ops", me.getSteps());
-        data.put("your_sx", you.getSx());
-        data.put("your_sy", you.getSy());
-        data.put("your_ops", you.getSteps());
+        data.put("my_sx", me.getSx().toString());
+        data.put("my_sy", me.getSy().toString());
+        data.put("my_ops", me.getStepsString());
+        data.put("your_sx", you.getSx().toString());
+        data.put("your_sy", you.getSy().toString());
+        data.put("your_ops", you.getStepsString());
         return data.toJSONString();
     }
 
@@ -291,6 +291,11 @@ public class Game extends Thread {
 
     @Override
     public void run() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         for (int i = 0; i < 1000; i++) {
             if (nextStep()) {
                 judge();
