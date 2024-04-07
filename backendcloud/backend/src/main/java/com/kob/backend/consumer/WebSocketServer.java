@@ -63,7 +63,7 @@ public class WebSocketServer {
         } else {
             this.session.close();
         }
-        System.out.println(user);
+//        System.out.println(user);
     }
 
     @OnClose
