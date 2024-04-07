@@ -29,11 +29,26 @@
                         {{ record.record.createtime }}
                     </td>
                     <td>
-                        <button @click="open_record_content(record.record.id)" type="button" class="btn btn-secondary">查看录像</button>
+                        <button @click="open_record_content(record.record.id)" type="button"
+                            class="btn btn-secondary">查看录像</button>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <nav aria-label="...">
+            <ul class="pagination" style="float: right;">
+                <li class="page-item" @click="click_page(-2)">
+                    <a class="page-link" href="#">前一页</a>
+                </li>
+                <li :class="'page-item ' + page.is_active" v-for="page in pages" :key="page.number"
+                    @click="click_page(page.number)">
+                    <a class="page-link" href="#">{{ page.number }}</a>
+                </li>
+                <li class="page-item" @click="click_page(-1)">
+                    <a class="page-link" href="#">后一页</a>
+                </li>
+            </ul>
+        </nav>
     </ContentField>
 </template>
 
@@ -52,6 +67,20 @@ export default {
         const store = useStore();
         let current_page = 1;
         let records = ref([]);
+        let pages = ref([]);
+        let total_records = 0;
+
+        const click_page = page => {
+            if (page === -2) {
+                page = current_page - 1;
+            } else if (page === -1) {
+                page = current_page + 1;
+            }
+            let max_pages = parseInt(Math.ceil(total_records / 10));
+            if (page >= 1 && page <= max_pages) {
+                pull_page(page);
+            }
+        };
 
         const pull_page = page => {
             current_page = page;
@@ -65,8 +94,9 @@ export default {
                     Authorization: "Bearer " + store.state.user.token,
                 },
                 success(resp) {
-                    console.log(resp);
                     records.value = resp.records;
+                    total_records = resp.records_count;
+                    update_pages();
                 },
                 error(resp) {
                     console.log(resp);
@@ -74,11 +104,25 @@ export default {
             });
         }
 
+        const update_pages = () => {
+            let max_pages = parseInt(Math.ceil(total_records / 10));
+            let new_pages = [];
+            for (let i = current_page - 2; i <= current_page + 2; i++) {
+                if (i >= 1 && i <= max_pages) {
+                    new_pages.push({
+                        number: i,
+                        is_active: i === current_page ? "active" : "",
+                    });
+                }
+            }
+            pages.value = new_pages;
+        };
+
         const stringTo2D = map => {
             let g = [];
-            for (let i = 0, k = 0; i < 13; i++ ) {
+            for (let i = 0, k = 0; i < 13; i++) {
                 let line = [];
-                for (let j = 0; j < 14; j++, k ++ ) {
+                for (let j = 0; j < 14; j++, k++) {
                     if (map[k] === '0') {
                         line.push(0);
                     } else {
@@ -123,6 +167,8 @@ export default {
         return {
             records,
             open_record_content,
+            pages,
+            click_page,
         }
     }
 }
@@ -133,5 +179,4 @@ img.record-user-photo {
     width: 4vh;
     border-radius: 50%;
 }
-
 </style>
