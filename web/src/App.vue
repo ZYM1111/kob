@@ -1,5 +1,5 @@
 <template>
-  <NavBar/>
+  <NavBar />
   <router-view />
 </template>
 
@@ -14,42 +14,13 @@ export default {
     NavBar
   },
   setup() {
-    // $.ajax({
-    //   url: "http://localhost:3000/user/account/token/",
-    //   type: "post",
-    //   data: {
-    //     username: "zym",
-    //     password: "pzym",
-    //   },
-    //   success(resp) {
-    //     console.log(resp);
-    //   },
-    //   error(resp) {
-    //     console.log(resp);
-    //   }
-    // });
-    // $.ajax({
-    //   url: "http://localhost:3000/user/account/register/",
-    //   type: "post",
-    //   data: {
-    //     username: "zym3",
-    //     password: "pzym3",
-    //     confirmedPassword: "pzym3",
-    //   },
-    //   success(resp) {
-    //     console.log(resp);
-    //   },
-    //   error(resp) {
-    //     console.log(resp);
-    //   }
-    // });
   }
 }
 </script>
 
 <style>
-body{
+body {
   background-image: url("@/assets/background.png");
   background-size: cover;
-} 
+}
 </style>
