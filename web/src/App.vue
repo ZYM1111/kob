@@ -1,5 +1,5 @@
 <template>
-  <NavBar/>
+  <NavBar />
   <router-view />
 </template>
 
@@ -32,9 +32,9 @@ export default {
     //   url: "http://localhost:3000/user/account/register/",
     //   type: "post",
     //   data: {
-    //     username: "zym3",
-    //     password: "pzym3",
-    //     confirmedPassword: "pzym3",
+    //     username: "zym",
+    //     password: "pzym",
+    //     confirmedPassword: "pzym",
     //   },
     //   success(resp) {
     //     console.log(resp);
@@ -48,8 +48,8 @@ export default {
 </script>
 
 <style>
-body{
+body {
   background-image: url("@/assets/background.png");
   background-size: cover;
-} 
+}
 </style>

@@ -3,10 +3,13 @@ package com.kob.botrunningsystem.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class Bot implements com.kob.botrunningsystem.utils.BotInterface {
+public class Bot implements java.util.function.Supplier<Integer> {
     static class Cell {
         public Integer x;
         public Integer y;
@@ -40,7 +43,6 @@ public class Bot implements com.kob.botrunningsystem.utils.BotInterface {
         return res;
     }
 
-    @Override
     public Integer nextMove(String input) {
         JSONObject data = JSON.parseObject(input);
         String map = data.getString("map");
@@ -74,5 +76,16 @@ public class Bot implements com.kob.botrunningsystem.utils.BotInterface {
             }
         }
         return 0;
+    }
+
+    @Override
+    public Integer get() {
+        File file = new File("input.txt");
+        try {
+            Scanner sc = new Scanner(file);
+            return nextMove(sc.next());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
